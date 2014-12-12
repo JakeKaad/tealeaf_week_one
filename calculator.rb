@@ -3,7 +3,7 @@ def say(msg)
 end
 
 def get_operator
-  operator = loop do  
+  loop do  
     say "Would you like to 1: Add, 2: Subtract, 3: Multiply, 4: divide"
     operator = gets.chomp
     return operator if ["1", "2", "3", "4"].include?(operator)

@@ -3,11 +3,18 @@ choices = {"p" => "paper", "r" => "rock", "s" => "scissors"}
 outcomes = {rock: "Rock crushes scissors! ", paper: "Paper covers rock! ", scissors: "Scissors snips paper! ", win: "You win!", lose: "You lose!" }
 win_lose= {["scissors", "paper"] => outcomes[:scissors] + outcomes[:win], ["rock", "scissors"] => outcomes[:rock] + outcomes[:win],  ["paper","rock"] => outcomes[:paper] + outcomes[:win],
            ["scissors","rock"] => outcomes[:rock] + outcomes[:lose], ["rock", "paper"] => outcomes[:paper] + outcomes[:lose], ["paper", "scissors"] => outcomes [:scissors] + outcomes[:lose]}
-player_score = 0
-computer_score = 0
 
+
+def score_points(value)
+  if value.include?("win")
+    player_score += 1
+  elsif value.include?("lose")
+    computer_score += 1
+  end
+end
 
 loop do
+ 
 
  begin
     begin
@@ -26,6 +33,12 @@ loop do
   end until player_choice != computer_choice
   choice_arr = [player_choice, computer_choice]
   puts win_lose[choice_arr]
+  player_score = 0
+  computer_score = 0
+  score_points(win_lose[choice_arr])
+
+  puts "          ScoreBoard"
+  puts "| Player: #{player_score} | Computer: #{computer_score} |"
   
 
   puts "Would you like to play again? (y/n)"

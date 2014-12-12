@@ -1,3 +1,4 @@
+
 def say(msg)
   puts "~~~~" + msg + "~~~~"
 end
@@ -10,18 +11,21 @@ num1 = gets.chomp
 say "Great, and what is your second number?"
 num2 = gets.chomp
 
-begin
+operator = 'a'
+loop do  
   say "Would you like to 1: Add, 2: Subtract, 3: Multiply, 4: divide"
   operator = gets.chomp
-end while operator == "1"
+  break if operator == '1' || operator == '2' || 
+           operator == '3' || operator == '4'
+end 
 
-if operator == "1" || operator.downcase == "add"
+if operator == "1"  
   result = num1.to_i + num2.to_i 
-elsif operator == "2" || operator.downcase == "subtract"
+elsif operator == "2" 
   result = num1.to_i - num2.to_i
-elsif operator == "3" || operator.downcase == "multiply"
+elsif operator == "3" 
   result = num1.to_i * num2.to_i
-elsif operator  == "4" || operator.downcase == "divide"
+elsif operator  == "4" 
   result = num1.to_f / num2.to_f
 else 
   "invalid operator"

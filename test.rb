@@ -1,3 +1,7 @@
-x = 1
-x += 1
-puts x
+a = 5
+
+def some_method
+  a = 3
+end
+
+puts a

@@ -8,10 +8,8 @@ player_score = 0
 computer_score = 0
 
 
+
 loop do
- 
- 
-  
 
  begin
     begin
@@ -39,9 +37,10 @@ loop do
   
   if win_lose[choice_arr].include?("win")
     player_score += 1
-  elsif win_lose[choice_arr].include?("lose")
+  else
     computer_score += 1
   end
+
 
   puts "--------ScoreBoard---------"
   puts "| Player: #{player_score} | Computer: #{computer_score} |"

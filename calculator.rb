@@ -1,4 +1,4 @@
-
+operator = 'a'
 def say(msg)
   puts "~~~~" + msg + "~~~~"
 end
@@ -11,7 +11,7 @@ num1 = gets.chomp
 say "Great, and what is your second number?"
 num2 = gets.chomp
 
-operator = 'a'
+
 loop do  
   say "Would you like to 1: Add, 2: Subtract, 3: Multiply, 4: divide"
   operator = gets.chomp

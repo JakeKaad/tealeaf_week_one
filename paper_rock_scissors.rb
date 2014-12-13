@@ -19,7 +19,6 @@ loop do
     end until choices.keys.include?(player_input)
     
     computer_choice = choices.values.sample
-    puts "The computer chose #{computer_choice}"
     
     if player_choice == computer_choice
       puts "You both chose #{computer_choice}, choose again"
@@ -28,6 +27,8 @@ loop do
   end until player_choice != computer_choice
   choice_arr = [player_choice, computer_choice]
   puts ""
+  puts ""
+  puts "You chose #{player_choice} and the computer chose #{computer_choice}"
   puts ""
   puts "~~~~~~~~~~~~~~~~~~~~~~~~"
   puts win_lose[choice_arr]

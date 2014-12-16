@@ -22,10 +22,9 @@ cards = {spades: SUIT.map { |card| card + " of Spades"},
          clubs: SUIT.map { |card| card + " of Clubs"},
          diamonds: SUIT.map { |card| card + " of Diamonds"},
          hearts: SUIT.map { |card| card + " of Hearts"}}
-
-def evaluate_points(hand)
-  hand = hand.map do |card|
-    case 
+def evaluate_cards_in_hand(hand)
+hand.map do |card|
+  case 
     when card.include?("2")
       2
     when card.include?("3")
@@ -54,7 +53,18 @@ def evaluate_points(hand)
       11
     end
   end
-  hand.inject(0) { |sum, card| sum + card }
+end
+
+def evaluate_points(hand)
+  hand = evaluate_cards_in_hand(hand).sort!
+  running_total = hand.inject(0) { |sum, card| sum + card }
+  if (running_total > 21 && hand.include?(11))
+    p hand
+    hand.pop; hand.push(1)
+    running_total = hand.inject(0) { |sum, card| sum + card }
+  else
+    return running_total
+  end
 end
 
 def did_hand_bust?(h_total)
@@ -65,8 +75,6 @@ def did_hand_bust?(h_total)
   end
 end
   
-
-
 def build_deck(cards)
   cards.values.to_a.flatten
 end
@@ -81,33 +89,68 @@ def deal_card(d)
   d.shuffle.shuffle.pop
 end
 
-
-puts "Lets play Blackjack!"
-deck = [DECK, DECK].flatten
-computer_hand = []
-player_hand = []
-deal_initial_hand(DECK, player_hand)
-deal_initial_hand(DECK, computer_hand)
-puts "The dealer is showing #{computer_hand[0]}"
-begin
-  player_hand_total = evaluate_points(player_hand)
-  puts "Your hand is #{player_hand.inspect}"
-  puts "Your total is #{player_hand_total}"
-  puts "Hit or Stay?"
-  hit_or_stay = gets.chomp
-  if hit_or_stay.downcase == "hit"
-    player_hand.push(deal_card(DECK))
+def computer_plays(h)
+  if evaluate_points(h) >= 17
+    "stay"
+  else
+    "hit"
   end
-  player_hand_total = evaluate_points(player_hand)
-end while ((hit_or_stay == "hit") && (player_hand_total < 21))
-
-puts "hello"
-binding.pry
-if did_hand_bust?(player_hand_total)
-  puts "Your hand is #{player_hand}"
-  puts "Your total is #{player_hand_total}"
-  puts "You busted!"
 end
 
-#values to cards
-#hand_total = sum of card's valuesin hand
+
+begin
+  puts "Lets play Blackjack!"
+  deck = [DECK, DECK].flatten
+  computer_hand = []
+  player_hand = []
+  deal_initial_hand(deck, player_hand)
+  deal_initial_hand(deck, computer_hand)
+  puts "The dealer is showing #{computer_hand[0]}"
+  
+  #player plays
+  begin
+    player_hand_total = evaluate_points(player_hand)
+    puts "Your hand is #{player_hand.inspect}"
+    puts "Your total is #{player_hand_total}"
+    puts "Hit or Stay?"
+    hit_or_stay = gets.chomp
+    if hit_or_stay.downcase == "hit"
+      player_hand.push(deal_card(deck))
+    end
+    player_hand_total = evaluate_points(player_hand)
+  end while ((hit_or_stay == "hit") && (player_hand_total < 21))
+  
+  if did_hand_bust?(player_hand_total)
+    puts "Your hand is #{player_hand}"
+    puts "Your total is #{player_hand_total}"
+    puts "You busted!"
+  end
+  
+  #dealer plays
+  begin
+    computer_hand_total = evaluate_points(computer_hand)
+    puts "The dealer has #{computer_hand}"
+    puts "The dealer has #{computer_hand_total}"
+    hit_or_stay = computer_plays(computer_hand)
+    puts "The dealer decides to #{hit_or_stay}"
+    computer_hand.push(deal_card(deck)) if hit_or_stay == "hit"
+  end while hit_or_stay == "hit"
+  computer_hand_total = evaluate_points(computer_hand)
+  
+   
+  puts "The dealer stayed with #{computer_hand} at #{evaluate_points(computer_hand)}"
+  puts "You kept #{player_hand} at #{player_hand_total}"
+  if did_hand_bust?(player_hand_total)
+    puts "You Busted. You lose!"
+  elsif did_hand_bust?(computer_hand_total)
+    puts "The Dealer busted.  You win!"
+  elsif computer_hand_total >= player_hand_total
+    puts "You lose!"
+  else
+    puts "You win!"
+  end
+  
+  puts "play again? (y/n)"
+  again = gets.chomp.downcase
+  
+end until again == "n"

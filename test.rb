@@ -1,7 +1,7 @@
-a = 5
 
-def some_method
-  a = 3
-end
+  def is_integer?(string)
+    string.to_i.to_s == string
+  end
 
-puts a
+
+puts "true" if is_integer?("12h")

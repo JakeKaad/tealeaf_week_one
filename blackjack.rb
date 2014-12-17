@@ -23,8 +23,8 @@ cards = {spades: SUIT.map { |card| card + " of Spades"},
          diamonds: SUIT.map { |card| card + " of Diamonds"},
          hearts: SUIT.map { |card| card + " of Hearts"}}
 def evaluate_cards_in_hand(hand)
-hand.map do |card|
-  case 
+  hand.map do |card|
+    case 
     when card.include?("2")
       2
     when card.include?("3")
@@ -68,11 +68,7 @@ def evaluate_points(hand)
 end
 
 def did_hand_bust?(h_total)
-  if h_total > 21
-    return true
-  else
-    return false
-  end
+  h_total > 21
 end
   
 def build_deck(cards)
@@ -97,9 +93,38 @@ def computer_plays(h)
   end
 end
 
+def winning_bet(bank, bet)
+  bank + (bet*2)
+end
 
+def is_integer?(string)
+  string.to_i.to_s == string
+end
+
+
+bank = 500
 begin
+  if bank == 0
+    puts "You don't have any more money! Come back on payday."
+    exit
+  end
   puts "Lets play Blackjack!"
+  begin
+    puts "You have $#{bank}. How much would you like to bet?"
+    bet = gets.chomp
+    if is_integer?(bet)
+      bet = bet.to_i
+    else
+      puts "Please enter an amount with no symbols."
+    end
+    if bet.to_i > bank
+      puts "You can't bet more than you have! All in!"
+      bet = bank
+    end
+  end until bet
+  bank = bank - bet
+  
+  
   deck = [DECK, DECK].flatten
   computer_hand = []
   player_hand = []
@@ -144,13 +169,17 @@ begin
     puts "You Busted. You lose!"
   elsif did_hand_bust?(computer_hand_total)
     puts "The Dealer busted.  You win!"
+    bank = winning_bet(bank, bet)
   elsif computer_hand_total >= player_hand_total
     puts "You lose!"
   else
     puts "You win!"
+    bank = winning_bet(bank, bet)
   end
   
   puts "play again? (y/n)"
   again = gets.chomp.downcase
   
 end until again == "n"
+
+puts "You finished with $#{bank}!"
